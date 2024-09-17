@@ -1,0 +1,114 @@
+{
+  "data": {
+    "Identity": [
+      {
+        "ID": "d8c46b56-32fc-477c-bb0b-c4e2c199cf56",
+        "Identifier": "dave-api",
+        "OWNS_Account": []
+      },
+      {
+        "ID": "5557b08f-43d3-439c-84ba-b7b4df040605",
+        "Identifier": "api-tboeltyei7",
+        "OWNS_Account": []
+      },
+      {
+        "ID": "51635de0-ee1a-4f00-9b36-4560180b1d16",
+        "Identifier": "alex",
+        "OWNS_Account": [
+          {
+            "to": {
+              "AccountID": "alexb",
+              "PART_OF_Source": [],
+              "HAS_Entitlement": [
+                {
+                  "to": {
+                    "ID": "032cd110-f60e-4e56-8fe1-effceb8af870",
+                    "Name": "Write-HRApp"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "ID": "be883a88-9069-454b-b5c3-941fb347619a",
+        "Identifier": "marius",
+        "OWNS_Account": [
+          {
+            "to": {
+              "AccountID": "MariusAD",
+              "PART_OF_Source": [
+                {
+                  "to": {
+                    "Name": "Active Directory - EU Domain"
+                  }
+                }
+              ],
+              "HAS_Entitlement": [
+                {
+                  "to": {
+                    "ID": "c6b5992f-4256-4afd-8232-9aa4c015b9f8",
+                    "Name": "Schema Admins"
+                  }
+                },
+                {
+                  "to": {
+                    "ID": "2c69eff7-811a-4ebf-af5f-15125293e126",
+                    "Name": "Domain Admins"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "ID": "463dc97f-a337-41a8-b800-bc6dd2410c9b",
+        "Identifier": "test_id_01",
+        "OWNS_Account": [
+          {
+            "to": {
+              "AccountID": "test-user-one",
+              "PART_OF_Source": [
+                {
+                  "to": {
+                    "Name": "Okta"
+                  }
+                }
+              ],
+              "HAS_Entitlement": [
+                {
+                  "to": {
+                    "ID": "6af0a85f-a683-4f66-b368-7b144e1a2c71",
+                    "Name": "GSuite Tile"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "to": {
+              "AccountID": "test01",
+              "PART_OF_Source": [
+                {
+                  "to": {
+                    "Name": "Active Directory - EU Domain"
+                  }
+                }
+              ],
+              "HAS_Entitlement": [
+                {
+                  "to": {
+                    "ID": "36adbd26-1f01-4e8f-bec7-e3cde92d0400",
+                    "Name": "Administrators"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
