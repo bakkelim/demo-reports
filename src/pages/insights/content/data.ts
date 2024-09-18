@@ -68,7 +68,7 @@ export const perform3EdgesQuery = async (data: any): Promise<Result> => {
       body: query,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `${accessToken}`,
       },
     });
     const response = await request;

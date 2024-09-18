@@ -14,18 +14,10 @@ import { StyledButton } from "../../../library/button/styled";
 const Content = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Result>();
-  // const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
   const [expandedIndex, setExpandedIndex] = useState<number>(-1);
+  const [selectedIdentity, setSelectedIdentity] = useState<string>('');
 
-  // const toggleRow = (index: number) => {
-  //   const newExpandedRows = new Set(expandedRows);
-  //   if (newExpandedRows.has(index)) {
-  //     newExpandedRows.delete(index);
-  //   } else {
-  //     newExpandedRows.add(index);
-  //   }
-  //   setExpandedRows(newExpandedRows);
-  // };
+
 
   const handleSubmit = async (e: any) => {
     setLoading(true);
@@ -98,6 +90,7 @@ const Content = () => {
                         type="text"
                         id="accessToken"
                         name="accessToken"
+                        defaultValue={"Basic "}
                       />
                     </div>
                   </div>
@@ -108,45 +101,63 @@ const Content = () => {
         </FormWrapper>
       </InnerContentWrapper>
       {result?.rows && (
-        <ResponseContentWrapper>
-          <table className="text-white min-w-full">
-            <thead className="border-b [text-shadow:0.05rem_0_0_currentColor]">
-              <tr>
-                <th className="px-4 py-2">Identity</th>
-                <th className="px-4 py-2">Account</th>
-                <th className="px-4 py-2">Source</th>
-                <th className="px-4 py-2">Entitlement</th>
-                <th className="px-4 py-2">Type</th>
-              </tr>
-            </thead>
-            <tbody>
-              {result.rows.length === 0 && <Label>No result</Label>}
-              {result.rows.map((row: Row, index: number) => (
-                <>
-                <tr key={index} onClick={() => setExpandedIndex(index === expandedIndex ?  -1 : index)} className="cursor-pointer even:bg-[#343a40] hover:bg-gray-700">
-                  <td className="px-4 py-2">{row.identity}</td>
-                  <td className="px-4 py-2">{row.account}</td>
-                  <td className="px-4 py-2">{row.source}</td>
-                  <td className="px-4 py-2">{row.entitlement}</td>
-                  <td className="px-4 py-2">{row.entitlementType}</td>
+        <>
+          <div className="flex justify-end">
+            <StyledButton type="button">
+              <div className="flex gap-1 items-center">
+                <i className="fa-regular fa-file-excel"></i>
+                Download
+              </div>
+            </StyledButton>
+          </div>
+
+          <ResponseContentWrapper>
+            <table className="text-white min-w-full">
+              <thead className="border-b [text-shadow:0.05rem_0_0_currentColor]">
+                <tr>
+                  <th className="px-4 py-2">Identity</th>
+                  <th className="px-4 py-2">Account</th>
+                  <th className="px-4 py-2">Source</th>
+                  <th className="px-4 py-2">Entitlement</th>
+                  <th className="px-4 py-2">Type</th>
                 </tr>
-                {(expandedIndex === index) && (
-                  <tr>
-                    <td colSpan={5} className="px-4 py-2">
-                      {/* Render additional details here */}
-                      <div>
-                        <p><strong>Entitlement Description:</strong></p>
-                        <p>{row.description}</p>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-                </>
-              ))}
-              
-            </tbody>
-          </table>
-        </ResponseContentWrapper>
+              </thead>
+              <tbody>
+                {result.rows.length === 0 && <Label>No result</Label>}
+                {result.rows.map((row: Row, index: number) => (
+                  <>
+                    <tr
+                      key={index}
+                      onClick={() =>
+                        setExpandedIndex(index === expandedIndex ? -1 : index)
+                      }
+                      className="cursor-pointer even:bg-[#343a40] hover:bg-gray-700"
+                    >
+                      <td className="px-4 py-2">{row.identity}</td>
+                      <td className="px-4 py-2">{row.account}</td>
+                      <td className="px-4 py-2">{row.source}</td>
+                      <td className="px-4 py-2">{row.entitlement}</td>
+                      <td className="px-4 py-2">{row.entitlementType}</td>
+                    </tr>
+                    {expandedIndex === index && (
+                      <tr>
+                        <td colSpan={5} className="px-4 py-2">
+                          {/* Render additional details here */}
+                          <div>
+                            <p>
+                              <strong>Entitlement Description:</strong>
+                            </p>
+                            <p>{row.description}</p>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </>
+                ))}
+              </tbody>
+            </table>
+          </ResponseContentWrapper>
+        </>
       )}
     </ContentWrapper>
   );
