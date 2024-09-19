@@ -11,7 +11,7 @@ export const LayoutRow = styled(Row)``;
 export const LayoutCol = styled(Col)`
   height: 100vh;
   &.navigation {
-    max-width: 300px;
+    max-width: 400px;
     border-right: 1px solid #1f1f1f;
     padding-right: 0px;
   }
