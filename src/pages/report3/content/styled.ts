@@ -10,7 +10,7 @@ export const InnerContentWrapper = styled.div`
 `;
 
 export const FormWrapper = styled.div`
-  padding: 40px;
+  padding: 20px;
   border-radius: 20px;
   margin-top: 25px;
   background-color: #1b1b1b;

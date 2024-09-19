@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ContentWrapper,
   Form,
@@ -17,9 +17,34 @@ const Content = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Result>();
   const [expandedIndex, setExpandedIndex] = useState<number>(-1);
-  const [selectedIdentity, setSelectedIdentity] = useState<string>('');
+  const [selectedIdentity, setSelectedIdentity] = useState<string>("");
   const configuration = getReportConfig();
+  const [uniqueIdentities, setUniqueIdentities] = useState<string[]>([]);
+  const [filteredResult, setFilteredResult] = useState<Result>();
 
+  useEffect(() => {
+    const uniqueIdentities =
+      result?.rows
+        .map((row) => row.identity)
+        .filter((value, index, self) => self.indexOf(value) === index)
+        .sort() || [];
+    setUniqueIdentities(uniqueIdentities);
+    setFilteredResult(result);
+  }, [result]);
+
+  const handleIdentityChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setSelectedIdentity(event.target.value);
+    if (event.target.value === "") {
+      setFilteredResult(result);
+    } else {
+      const filteredRows = result?.rows.filter(
+        (row) => row.identity === event.target.value
+      );
+      setFilteredResult({ rows: filteredRows || [] });
+    }
+  };
 
   const handleSubmit = async (e: any) => {
     setLoading(true);
@@ -74,7 +99,7 @@ const Content = () => {
                         type="text"
                         id="endpointUrl"
                         name="endpointUrl"
-                        defaultValue={ configuration.endpointUrl}
+                        defaultValue={configuration.endpointUrl}
                       />
                     </div>
                   </div>
@@ -92,7 +117,7 @@ const Content = () => {
                         type="text"
                         id="accessToken"
                         name="accessToken"
-                        defaultValue={ configuration.adminToken}
+                        defaultValue={configuration.adminToken}
                       />
                     </div>
                   </div>
@@ -102,7 +127,7 @@ const Content = () => {
           </Form>
         </FormWrapper>
       </InnerContentWrapper>
-      {result?.rows && (
+      {filteredResult?.rows && (
         <>
           <div className="flex justify-end">
             <StyledButton type="button">
@@ -112,7 +137,22 @@ const Content = () => {
               </div>
             </StyledButton>
           </div>
-
+          <div className="">
+            <Label>Filter by Identity:</Label>
+            <select
+              id="identityFilter"
+              value={selectedIdentity}
+              onChange={handleIdentityChange}
+              className="ml-2 p-2 border border-gray-300 rounded"
+            >
+              <option value="">All</option>
+              {uniqueIdentities.map((row, index) => (
+                <option key={index} value={row}>
+                  {row}
+                </option>
+              ))}
+            </select>
+          </div>
           <ResponseContentWrapper>
             <table className="text-white min-w-full">
               <thead className="border-b [text-shadow:0.05rem_0_0_currentColor]">
@@ -125,8 +165,8 @@ const Content = () => {
                 </tr>
               </thead>
               <tbody>
-                {result.rows.length === 0 && <Label>No result</Label>}
-                {result.rows.map((row: Row, index: number) => (
+                {filteredResult.rows.length === 0 && <Label>No result</Label>}
+                {filteredResult.rows.map((row: Row, index: number) => (
                   <>
                     <tr
                       key={index}
