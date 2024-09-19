@@ -10,12 +10,14 @@ import Title from "../../../library/title";
 import Label from "../../../library/label";
 import { Result, Row, perform3EdgesQuery } from "./data";
 import { StyledButton } from "../../../library/button/styled";
+import useConfiguration from "../../../hooks/useConfiguration";
 
 const Content = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Result>();
   const [expandedIndex, setExpandedIndex] = useState<number>(-1);
-  const [selectedIdentity, setSelectedIdentity] = useState<string>('');
+  const { getReportConfig } = useConfiguration();
+  const configuration = getReportConfig();
 
 
 
@@ -72,7 +74,7 @@ const Content = () => {
                         type="text"
                         id="endpointUrl"
                         name="endpointUrl"
-                        defaultValue={"https://api-ent.3edges.io/graphql"}
+                        defaultValue={ configuration.endpointUrl}
                       />
                     </div>
                   </div>
@@ -90,7 +92,7 @@ const Content = () => {
                         type="text"
                         id="accessToken"
                         name="accessToken"
-                        defaultValue={"Basic "}
+                        defaultValue={ configuration.adminToken}
                       />
                     </div>
                   </div>

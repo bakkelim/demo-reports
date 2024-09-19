@@ -4,6 +4,12 @@ import { toast } from "react-toastify";
 
 const LOCALSTORAGE_INGEST_CONFIG = "ik_graphingest_configs";
 
+export interface ReportConfig {
+  endpointUrl: string;
+  userToken: string;
+  adminToken: string;
+}
+
 export type Config = {
   id: string;
   title: string;
@@ -98,10 +104,28 @@ const useConfiguration = () => {
     });
   };
 
+  const getReportConfig = (): ReportConfig => {
+    let configValue: ReportConfig = {
+      endpointUrl: "https://api-ent.3edges.io/graphql",
+      userToken: "Bearer ",
+      adminToken: "Basic ",
+    };
+
+    const localConfigs = readLocalConfigurations();
+    if (!localConfigs || localConfigs.length === 0) {      
+      return configValue;
+    }
+
+    const config = localConfigs[0];
+    configValue = JSON.parse(config.value);
+    return configValue;
+  };
+
   return {
     addConfigurationRecord,
     deleteConfigurationRecord,
     configurations,
+    getReportConfig,
   };
 };
 
