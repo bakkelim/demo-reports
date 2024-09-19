@@ -62,7 +62,7 @@ const Content = () => {
   return (
     <ContentWrapper>
       <InnerContentWrapper>
-        <Title>Entitlement Report</Title>
+        <Title>Global User Access Report</Title>
         <FormWrapper>
           <Form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-3">

@@ -128,10 +128,10 @@ const Content = () => {
                   <th className="px-4 py-2">Source</th>
                   <th className="px-4 py-2">Account</th>
                   <th className="px-4 py-2">Account Type</th>
-                  <th className="px-4 py-2">Privileged Account</th>
+                  {/* <th className="px-4 py-2">Privileged Account</th> */}
                   <th className="px-4 py-2">Entitlement</th>
                   <th className="px-4 py-2">Entitlement Type</th>
-                  <th className="px-4 py-2">Privileged Entitlement</th>
+                  {/* <th className="px-4 py-2">Privileged Entitlement</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -148,10 +148,10 @@ const Content = () => {
                       <td className="px-4 py-2">{row.source}</td>
                       <td className="px-4 py-2">{row.account}</td>
                       <td className="px-4 py-2">{row.accountType}</td>
-                      <td className="px-4 py-2">{row.accountPrivileged}</td>
+                      {/* <td className="px-4 py-2">{row.accountPrivileged}</td> */}
                       <td className="px-4 py-2">{row.entitlement}</td>
                       <td className="px-4 py-2">{row.entitlementType}</td>
-                      <td className="px-4 py-2">{row.entitlementPrivileged}</td>
+                      {/* <td className="px-4 py-2">{row.entitlementPrivileged}</td> */}
                     </tr>
                     {expandedIndex === index && (
                       <tr>
