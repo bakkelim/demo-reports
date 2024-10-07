@@ -8,12 +8,14 @@ import Report3 from "./pages/report3";
 import Authorization from "./pages/authorization";
 import "react-toastify/dist/ReactToastify.css";
 import TrustedDataAccess from "./pages/tda";
+import DataAccess from "./pages/data-access";
 
 const Routes = () => {
   return (
     // <BrowserRouter basename="/pov2">
     <BrowserRouter>
       <AllRoutes>
+        <Route path="/data-access" element={<DataAccess />} />
         <Route path="/insights" element={<Insights />} />
         <Route path="/report2" element={<Report2 />} />
         <Route path="/report3" element={<Report3 />} />
