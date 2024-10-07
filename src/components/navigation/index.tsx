@@ -13,6 +13,11 @@ import { Link, useLocation } from "react-router-dom";
 const FUNCTION_LINKS = [
   {
     icon: <i className="fa-solid fa-file"></i>,
+    title: "Data Access Report",
+    target: "/data-access",
+  },
+  {
+    icon: <i className="fa-solid fa-file"></i>,
     title: "Global User Access Report",
     target: "/insights",
   },
