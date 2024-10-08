@@ -145,6 +145,9 @@ const parseGraphQLResponse = (response: any): Result => {
       const canAccessDataElement = (groupWrapper.to.CAN_ACCESS_DataElement || []).length > 0;
       const canAccessDataType = (groupWrapper.to.CAN_ACCESS_DataType || []).length > 0;
       const canReadDataZone = (groupWrapper.to.CAN_READ_DataZone || []).length > 0;
+      const canSearchDataZone = (groupWrapper.to.CAN_SEARCH_DataZone || []).length > 0;
+      const canUpdateDataZone = (groupWrapper.to.CAN_UPDATE_DataZone || []).length > 0;
+
       if (canAccessDataElement) {
         (groupWrapper.to.CAN_ACCESS_DataElement || []).forEach((elementWrapper: any) => {
           const dataElement = elementWrapper.to.name;
@@ -236,6 +239,41 @@ const parseGraphQLResponse = (response: any): Result => {
           });
         });
       }
+      if (canSearchDataZone) {
+        (groupWrapper.to.CAN_SEARCH_DataZone || []).forEach((zoneWrapper: any) => {
+          const dataZone = zoneWrapper.to.name;
+            rows.push({
+              identity: identityName,
+              email: user.email,
+              type: user.type,
+              username: user.username,
+              group,
+              accessType: 'Zone (Search)',
+              dataElement: '',
+              dataType: '',
+              dataZone,
+              description: '',
+            });
+          });
+      }
+      if (canUpdateDataZone) {
+        (groupWrapper.to.CAN_UPDATE_DataZone || []).forEach((zoneWrapper: any) => {
+          const dataZone = zoneWrapper.to.name;
+            rows.push({
+              identity: identityName,
+              email: user.email,
+              type: user.type,
+              username: user.username,
+              group,
+              accessType: 'Zone (Update)',
+              dataElement: '',
+              dataType: '',
+              dataZone,
+              description: '',
+            });
+          });
+      }
+
     });
   });
 
