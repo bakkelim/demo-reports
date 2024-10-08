@@ -62,7 +62,7 @@ const Content = () => {
   return (
     <ContentWrapper>
       <InnerContentWrapper>
-        <Title>Global User Access Report</Title>
+        <Title>Data Access Report</Title>
         <FormWrapper>
           <Form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-3">
@@ -117,7 +117,7 @@ const Content = () => {
                         type="text"
                         id="accessToken"
                         name="accessToken"
-                        defaultValue={configuration.adminToken}
+                        defaultValue="Basic 6219bb11-2379-4045-bc06-930f3700362f9ca0473b-265a-43aa-8927-ab89a1439867bef9cb8b-357e-4bfe-89a6-895cedae8cda"
                       />
                     </div>
                   </div>
@@ -158,10 +158,14 @@ const Content = () => {
               <thead className="border-b [text-shadow:0.05rem_0_0_currentColor]">
                 <tr>
                   <th className="px-4 py-2">Identity</th>
-                  <th className="px-4 py-2">Account</th>
-                  <th className="px-4 py-2">Source</th>
-                  <th className="px-4 py-2">Entitlement</th>
+                  <th className="px-4 py-2">Email</th>
                   <th className="px-4 py-2">Type</th>
+                  <th className="px-4 py-2">Username</th>
+                  <th className="px-4 py-2">Group</th>
+                  <th className="px-4 py-2">Access Type</th>
+                  <th className="px-4 py-2">Can Access Element</th>
+                  <th className="px-4 py-2">Can Access Type</th>
+                  <th className="px-4 py-2">Can Access Zone</th>
                 </tr>
               </thead>
               <tbody>
@@ -176,10 +180,14 @@ const Content = () => {
                       className="cursor-pointer even:bg-[#343a40] hover:bg-gray-700"
                     >
                       <td className="px-4 py-2">{row.identity}</td>
-                      <td className="px-4 py-2">{row.account}</td>
-                      <td className="px-4 py-2">{row.source}</td>
-                      <td className="px-4 py-2">{row.entitlement}</td>
-                      <td className="px-4 py-2">{row.entitlementType}</td>
+                      <td className="px-4 py-2">{row.email}</td>
+                      <td className="px-4 py-2">{row.type}</td>
+                      <td className="px-4 py-2">{row.username}</td>
+                      <td className="px-4 py-2">{row.group}</td>
+                      <td className="px-4 py-2">{row.accessType}</td>
+                      <td className="px-4 py-2">{row.dataElement}</td>
+                      <td className="px-4 py-2">{row.dataType}</td>
+                      <td className="px-4 py-2">{row.dataZone}</td>
                     </tr>
                     {expandedIndex === index && (
                       <tr>

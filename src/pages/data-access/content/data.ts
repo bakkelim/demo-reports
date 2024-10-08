@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 
-// const ENDPOINT_URL="https://api-ent.3edges.io/graphql"
-// const ACCESS_TOKEN="0PxnQWjNDXzzV_50rjY-dn-pTvHWWzqVDX5zgG3AvUQ"
+// const ENDPOINT_URL="https://api-pc2dqv6u0z.3edges.io/graphql"
+// const ACCESS_TOKEN=""
 
 export interface Result {
   rows: Row[];
@@ -9,16 +9,21 @@ export interface Result {
 
 export interface Row {
   identity: string;
-  account: string;
-  source: string;
-  entitlement: string;
-  entitlementType: string;
+  email: string;
+  type: string;
+  username: string;
+  group: string;
+  accessType: string;
+  dataElement: string;
+  dataType: string;
+  dataZone: string;
   description: string;
 }
 
 export const perform3EdgesQuery = async (data: any): Promise<Result> => {
   const result: Result = { rows: [] };
 
+  // const endpointUrl = ENDPOINT_URL;
   const endpointUrl = data.endpointUrl;
   if (!endpointUrl) {
     toast("endpointUrl not provided", {
@@ -28,6 +33,7 @@ export const perform3EdgesQuery = async (data: any): Promise<Result> => {
     return result;
   }
 
+  // const accessToken = ACCESS_TOKEN;
   const accessToken = data.accessToken;
   if (!accessToken) {
     toast("accessToken not provided", {
@@ -40,26 +46,66 @@ export const perform3EdgesQuery = async (data: any): Promise<Result> => {
   try {
     const query = JSON.stringify({
       "query": `query {
-  Identity{
-    Identifier
-    OWNS_Account{
-      to{
-        AccountID
-          PART_OF_Source{
-            to{
-              Name
+  User {
+    email
+    name
+    type
+    username
+    MEMBER_OF_Group {
+      to {
+        name
+        CAN_ACCESS_DataElement {
+          to {
+            externalID
+            name
+            source
+          }
+        }
+        CAN_ACCESS_DataType {
+          to {
+            name
+            ID
+          }
+        }
+        CAN_READ_DataZone {
+          to {
+            name
+            ID
+            CONTAINS_DataElement {
+              to {
+                name
+                source
+                externalID
+              }
+            }
+            CONTAINS_DataType {
+              to {
+                name
+                CONTAINS_DataElement {
+                  to {
+                    name
+                    source
+                    externalID
+                  }
+                }
+              }
             }
           }
-          HAS_Entitlement{
-            to{
-              Name
-              Description
-              EntitlementType
-            }
+        }
+        CAN_SEARCH_DataZone {
+          to {
+            name
+          }
+        }
+        CAN_UPDATE_DataZone {
+          to {
+            ID
+            name
           }
         }
       }
     }
+  }
 }`
        });
 
@@ -92,59 +138,101 @@ export const perform3EdgesQuery = async (data: any): Promise<Result> => {
 const parseGraphQLResponse = (response: any): Result => {
   const rows: Row[] = [];
 
-  (response.data.Identity || []).forEach((identity: any) => {
-    const identityName = identity.Identifier;
-
-    (identity.OWNS_Account || []).forEach((accountWrapper: any) => {
-      const account = accountWrapper.to.AccountID;
-      const hasSources = (accountWrapper.to.PART_OF_Source || []).length > 0;
-      const hasEntitlements = (accountWrapper.to.HAS_Entitlement || []).length > 0;  
-      
-      if (!hasSources && !hasEntitlements) {
-        rows.push({
-          identity: identityName,
-          account,
-          source: '',
-          entitlement: '',
-          entitlementType: '',
-          description: '',
+  (response.data.User || []).forEach((user: any) => {
+    const identityName = user.name;
+    (user.MEMBER_OF_Group || []).forEach((groupWrapper: any) => {
+      const group = groupWrapper.to.name;
+      const canAccessDataElement = (groupWrapper.to.CAN_ACCESS_DataElement || []).length > 0;
+      const canAccessDataType = (groupWrapper.to.CAN_ACCESS_DataType || []).length > 0;
+      const canReadDataZone = (groupWrapper.to.CAN_READ_DataZone || []).length > 0;
+      if (canAccessDataElement) {
+        (groupWrapper.to.CAN_ACCESS_DataElement || []).forEach((elementWrapper: any) => {
+          const dataElement = elementWrapper.to.name;
+          rows.push({
+            identity: identityName,
+            email: user.email,
+            type: user.type,
+            username: user.username,
+            group,
+            accessType: 'Element',
+            dataElement,
+            dataType: '',
+            dataZone: '',
+            description: '',
+          });
         });
-      } else if (hasSources && hasEntitlements) {
-        (accountWrapper.to.PART_OF_Source || []).forEach((sourceWrapper: any) => {
-          const source = sourceWrapper.to.Name;
+      }
+      if (canAccessDataType) {
+        (groupWrapper.to.CAN_ACCESS_DataType || []).forEach((typeWrapper: any) => {
+          const dataType = typeWrapper.to.name;
+          rows.push({
+            identity: identityName,
+            email: user.email,
+            type: user.type,
+            username: user.username,
+            group,
+            accessType: 'Type',
+            dataElement: '',
+            dataType,
+            dataZone: '',
+            description: '',
+          });
+        });
 
-          (accountWrapper.to.HAS_Entitlement || []).forEach((entitlementWrapper: any) => {
+      }
+      if (canReadDataZone) {
+        (groupWrapper.to.CAN_READ_DataZone || []).forEach((zoneWrapper: any) => {
+          const dataZone = zoneWrapper.to.name;
+          const containsDataElement = (zoneWrapper.to.CONTAINS_DataElement || []).length > 0;
+          const containsDataType = (zoneWrapper.to.CONTAINS_DataType || []).length > 0;
+          (zoneWrapper.to.CONTAINS_DataElement || []).forEach((elementWrapper: any) => {
+            const dataElement = elementWrapper.to.name;
             rows.push({
               identity: identityName,
-              account,
-              source,
-              entitlement: entitlementWrapper.to.Name,
-              entitlementType: entitlementWrapper.to.EntitlementType,
-              description: entitlementWrapper.to.Description,
+              email: user.email,
+              type: user.type,
+              username: user.username,
+              group,
+              accessType: 'Zone',
+              dataElement,
+              dataType: '',
+              dataZone,
+              description: '',
             });
           });
-        });
-      } else if (hasEntitlements && !hasSources) {
-        (accountWrapper.to.HAS_Entitlement || []).forEach((entitlementWrapper: any) => {
-          rows.push({
-            identity: identityName,
-            account,
-            source: '',
-            entitlement: entitlementWrapper.to.Name,
-            entitlementType: entitlementWrapper.to.EntitlementType,
-            description: entitlementWrapper.to.Description
-          });
-        });
-      } else if (hasSources && !hasEntitlements) {
-        (accountWrapper.to.PART_OF_Source || []).forEach((sourceWrapper: any) => {
-          const source = sourceWrapper.to.Name;
-          rows.push({
-            identity: identityName,
-            account,
-            source,
-            entitlement: '',
-            entitlementType: '',
-            description: '',
+          (zoneWrapper.to.CONTAINS_DataType || []).forEach((typeWrapper: any) => {
+            const dataType = typeWrapper.to.name;
+            const containsDataElement = (typeWrapper.to.CONTAINS_DataElement || []).length > 0;
+            if (!containsDataElement) {
+              rows.push({
+                identity: identityName,
+                email: user.email,
+                type: user.type,
+                username: user.username,
+                group,
+                accessType: 'Zone',
+                dataElement: '',
+                dataType,
+                dataZone,
+                description: '',
+              });
+            } else {
+              (typeWrapper.to.CONTAINS_DataElement || []).forEach((elementWrapper: any) => {
+                const dataElement = elementWrapper.to.name;
+                rows.push({
+                  identity: identityName,
+                  email: user.email,
+                  type: user.type,
+                  username: user.username,
+                  group,
+                  accessType: 'Zone',
+                  dataElement,
+                  dataType,
+                  dataZone,
+                  description: '',
+                });
+              });
+            }
           });
         });
       }
